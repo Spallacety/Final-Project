@@ -166,5 +166,6 @@ class APIRoot(generics.GenericAPIView):
                      'clients': reverse(ClientList.name, request=request),
                      'sales': reverse(SaleList.name, request=request),
                      'products': reverse(ProductList.name, request=request),
-                     'sale-items': reverse(SaleItemList.name, request=request)
+                     'sale-items': reverse(SaleItemList.name, request=request),
+                     'swagger': reverse('swagger', request=request)
                      })

@@ -18,5 +18,5 @@ urlpatterns = [
   url(r'^sale-item/(?P<pk>[0-9]+)/$', SaleItemDetail.as_view(), name=SaleItemDetail.name),
   url(r'^products/$', ProductList.as_view(), name=ProductList.name),
   url(r'^product/(?P<pk>[0-9]+)/$', ProductDetail.as_view(), name=ProductDetail.name),
-  url(r'^swagger/$', schema_view),
+  url(r'^swagger/$', schema_view, name='swagger'),
 ]
