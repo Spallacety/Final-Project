@@ -88,6 +88,36 @@
   {% endif %}
 </div>
 
+<div id="modalCreate" class="modal">
+  <div class="modal-content">
+    <h4><i class="material-icons green-text">check</i> Created</h4>
+    <p>Successfully created.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" onclick="location.reload()" class="modal-action modal-close btn-flat">Ok</a>
+  </div>
+</div>
+
+<div id="modalEdit" class="modal">
+  <div class="modal-content">
+    <h4><i class="material-icons amber-text">edit</i> Edited</h4>
+    <p>Successfully edited.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close btn-flat">Ok</a>
+  </div>
+</div>
+
+<div id="modalDelete" class="modal">
+  <div class="modal-content">
+    <h4><i class="material-icons red-text">warning</i> Deleted</h4>
+    <p>Successfully deleted.</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-action modal-close btn-flat">Ok</a>
+  </div>
+</div>
+
 <script type="text/javascript">
 		var app = new Vue({
 			el: '#app',
@@ -109,7 +139,7 @@
 					axios.post("/api/products/", app.product)
 					.then(function(response){
 						app.response = response
-						this.getProducts()
+						$('#modalCreate').modal('open');
 					})
 					.catch(e => {
 						console.log(e)
@@ -127,7 +157,7 @@
         confirmUpdate : function(product) {
           axios.put('/api/product/'+ product.id +'/', product)
             .then(function(response) {
-
+              $('#modalEdit').modal('open');
             })
             .catch(e => {
               console.log(e)
@@ -141,6 +171,7 @@
           axios.delete('/api/product/'+ product.id + '/')
             .then(function(response) {
                 app.products.splice(index,1)
+                $('#modalDelete').modal('open');
             })
             .catch(e => {
               console.log(e)
@@ -172,6 +203,7 @@
         }
 			}
 		});
+
 </script>
 
 {% endblock %}

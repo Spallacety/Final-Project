@@ -55,9 +55,7 @@
           <div class="row">
             <div class="input-field col s12">
               <select v-model="sale.client">
-                <option disabled selected>Client</option>
-                <option>Ricardo Santos</option>
-                <option v-for="client in clients" value="[[ client.id ]]">[[client.name]]</option>
+                <option v-for="client in clients" v-bind:value="[[ client.id ]]">[[client.name]]</option>
               </select>
               <label>Client</label>
             </div>

@@ -9,7 +9,7 @@ $(document).ready(function() {
   $('.tooltipped').tooltip({delay: 50});
   $(".button-collapse").sideNav();
   $('.modal').modal({
-    dismissible: true
+    dismissible: false
   });
   $(".dropdown-button").dropdown({
     inDuration: 300,
