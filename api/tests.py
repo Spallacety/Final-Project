@@ -7,7 +7,7 @@ class APITest(TestCase):
   fixtures = ['fixtures.json']
 
   def auth(self):
-    self.client.post("/api-auth/login/", {"username": "lucas", "password": "xpto"})
+    self.client.post("/auth/login/", {"username": "lucas", "password": "xpto"})
 
   def test_employee_list_unauth(self):
     response = self.client.get(reverse('employee-list'))
@@ -146,12 +146,12 @@ class APITest(TestCase):
 
   def test_delete_my_sale_auth(self):
     self.auth()
-    response = self.client.delete(reverse('sale-detail', args=[1]))
+    response = self.client.delete(reverse('sale-detail', args=[2]))
     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
   def test_delete_other_sale_auth(self):
     self.auth()
-    response = self.client.delete(reverse('sale-detail', args=[2]))
+    response = self.client.delete(reverse('sale-detail', args=[1]))
     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
   def test_sale_item_list(self):
@@ -171,7 +171,7 @@ class APITest(TestCase):
 
   def test_new_item_on_my_sale_auth(self):
     self.auth()
-    request_data = {"sale": reverse('sale-detail', args=[1]),
+    request_data = {"sale": reverse('sale-detail', args=[2]),
                     "product": "Leite",
                     "quantity": 2, }
     response = self.client.post(reverse('saleitem-list'), json.dumps(request_data), 'application/json')
@@ -179,7 +179,7 @@ class APITest(TestCase):
 
   def test_new_item_on_other_sale_auth(self):
     self.auth()
-    request_data = {"sale": reverse('sale-detail', args=[2]),
+    request_data = {"sale": reverse('sale-detail', args=[1]),
                     "product": "Leite",
                     "quantity": 2, }
     response = self.client.post(reverse('saleitem-list'), json.dumps(request_data), 'application/json')
@@ -191,10 +191,10 @@ class APITest(TestCase):
 
   def test_delete_item_on_my_sale_auth(self):
     self.auth()
-    response = self.client.delete(reverse('saleitem-detail', args=[1]))
+    response = self.client.delete(reverse('saleitem-detail', args=[4]))
     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
   def test_delete_item_on_other_sale_auth(self):
     self.auth()
-    response = self.client.delete(reverse('saleitem-detail', args=[3]))
+    response = self.client.delete(reverse('saleitem-detail', args=[1]))
     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
