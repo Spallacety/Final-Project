@@ -56,8 +56,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', models.DateField()),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shoppings', to='core.Client')),
-                ('employee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sales', to='core.Employee')),
+                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='shoppings', to='api.Client')),
+                ('employee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sales', to='api.Employee')),
             ],
         ),
         migrations.CreateModel(
@@ -66,8 +66,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quantity', models.IntegerField()),
                 ('total_price', models.FloatField()),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sold', to='core.Product')),
-                ('sale', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='core.Sale')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sold', to='api.Product')),
+                ('sale', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='api.Sale')),
             ],
         ),
     ]

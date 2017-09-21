@@ -1,0 +1,16 @@
+{% extends base_template %}
+
+{% block content %}
+
+<br>
+<div class="row center">
+  <a class="btn waves-effect waves-light red darken-1" href="{% url 'employees' %}">Employees</a>
+</div>
+<div class="row center">
+  <a class="btn waves-effect waves-light red darken-1" href="{% url 'clients' %}">Clients</a>
+</div>
+<div class="row center">
+  <a class="btn waves-effect waves-light light-green darken-1" href="{% url 'swagger' %}">Swagger</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends base_template %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<h4 class="main-text center">Employees</h4>
+
+<div id="app">
+  <div class="row">
+    <div class="col s12">
+      <table class="highlight">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for='employee in employees'>
+          <td>[[ employee.name ]]</td>
+          <td>[[ employee.user.username ]]</td>
+          <td>$ [[ employee.salary ]]</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ul class="pagination center">
+    <li><a class="tooltipped" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Previous" @click="getEmployees(pagination.previous)" disabled="!pagination.previous"><i
+        class="material-icons">chevron_left</i></a></li>
+    <li><a class="tooltipped" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Next" @click="getEmployees(pagination.next)" disabled="!pagination.next"><i
+        class="material-icons">chevron_right</i></a></li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			delimiters: ["[[","]]"],
+			data : {
+				employees : [],
+				pagination : {
+          count : 0,
+          next : '',
+          previous : ''
+        },
+			},
+			mounted () {
+        this.getEmployees('/api/employees/')
+			},
+			methods : {
+				getEmployees : function(url){
+          axios.get(url)
+          .then(function(response){
+            app.employees = response.data.results
+
+            var pagination = {
+              count : response.data.count,
+              next : response.data.next,
+              previous : response.data.previous,
+              pageSize : 5,
+              total : Math.round(response.data.count/5)
+            }
+
+            app.pagination = pagination
+          })
+          .catch(e => {
+            console.log(e)
+          })
+         }
+			}
+		});
+</script>
+
+{% else %}
+
+<div class='row center'>
+  <p class='center'>You don't have permission to view this page.</p>
+  <a class='btn waves-effect waves-light main-color' href="{% url 'login' %}">Log in</a>
+</div>
+
+{% endif %}
+
+{% endblock %}

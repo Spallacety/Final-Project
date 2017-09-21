@@ -12,7 +12,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Employee
-    fields = ('url', 'name', 'user', 'salary',)
+    fields = ('url', 'id', 'name', 'user', 'salary',)
 
 class EmployeeDetailSerializer(serializers.ModelSerializer):
   user = UserSerializer()
@@ -20,19 +20,19 @@ class EmployeeDetailSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Employee
-    fields = ('url', 'name', 'user', 'salary', 'sales',)
+    fields = ('url', 'id', 'name', 'user', 'salary', 'sales',)
 
 class ClientSerializer(serializers.ModelSerializer):
   class Meta:
     model = Client
-    fields = ('url', 'name', 'address', 'phone',)
+    fields = ('url', 'id', 'name', 'address', 'phone',)
 
 class ClientDetailSerializer(serializers.ModelSerializer):
   shoppings = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='sale-detail')
 
   class Meta:
     model = Client
-    fields = ('url', 'name', 'address', 'phone', 'shoppings')
+    fields = ('url', 'id', 'name', 'address', 'phone', 'shoppings')
 
 class ProductSerializer(serializers.ModelSerializer):
   class Meta:

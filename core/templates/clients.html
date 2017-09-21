@@ -1,0 +1,175 @@
+{% extends base_template %}
+
+{% block content %}
+
+<h4 class="main-text center">Clients</h4>
+
+<div id="app">
+  <div class="row">
+    <div class="col s12">
+      <table class="highlight">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Address</th>
+          <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for='client in clients'>
+          <td>[[ client.name ]]</td>
+          <td>[[ client.address ]]</td>
+          <td>[[ client.phone ]]</td>
+
+          {% if request.user.is_authenticated %}
+          <td class="row vallign right-align">
+            <a class="btn-flat img-btn tooltipped" @click="deleteClient(client)">
+              <i class="material-icons red-text">delete</i>
+            </a>
+          </td>
+          {% endif %}
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ul class="pagination center">
+    <li><a class="tooltipped" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Previous" @click="getClients(pagination.previous)" :disabled="!pagination.previous"><i
+        class="material-icons">chevron_left</i></a></li>
+    <li><a class="tooltipped" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Next" @click="getClients(pagination.next)" :disabled="!pagination.next"><i
+        class="material-icons">chevron_right</i></a></li>
+  </ul>
+
+
+  {% if request.user.is_authenticated %}
+  <div class="row">
+    <div class="col s12">
+      <div class="card-panel grey lighten-5">
+        <h4 class="center main-text">Create new client</h4>
+        <form>
+          {% csrf_token %}
+          <div class="row">
+            <div class="col s12">
+              <div class="input-field col s12">
+                <input name="name" id="name" type="text" v-model="client.name" required>
+                <label for="name">Name</label>
+              </div>
+            </div>
+            <div class="col s12">
+              <div class="input-field col s12">
+                <input name="address" id="address" type="text" v-model="client.address" required>
+                <label for="address">Address</label>
+              </div>
+            </div>
+            <div class="col s12">
+              <div class="input-field col s12">
+                <input name="phone" id="phone" type="text" v-model="client.phone" required>
+                <label for="phone">Phone</label>
+              </div>
+            </div>
+            <div class="input-field col s12 center">
+              <button class="btn waves-effect waves-light main-color" @click.prevent="makeClient">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			delimiters: ["[[","]]"],
+			data : {
+				clients : [],
+				client : {name : "", address : "", phone : ""},
+				pagination : {
+          count : 0,
+          next : '',
+          previous : ''
+        },
+			},
+			mounted () {
+        this.getClients('/api/clients/')
+			},
+			methods : {
+			  makeClient : function(){
+					axios.post("/api/clients/", app.client)
+					.then(function(response){
+						app.response = response
+						this.getClients()
+					})
+					.catch(e => {
+						console.log(e)
+					})
+				},
+
+        editClient : function(client){
+          client.editing = true
+        },
+
+        cancelEditing : function(client) {
+          client.editing = false
+        },
+
+        confirmUpdate : function(client) {
+          axios.put('/api/client/'+ client.id +'/', client)
+            .then(function(response) {
+
+            })
+            .catch(e => {
+              console.log(e)
+            })
+            client.editing = false
+        },
+
+				deleteClient : function(client) {
+          var index = app.clients.indexOf(client)
+
+          axios.delete('/api/client/'+ client.id + '/')
+            .then(function(response) {
+                app.clients.splice(index,1)
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        },
+
+				getClients : function(url){
+          axios.get(url)
+          .then(function(response){
+            response.data.results.map(function (client) {
+              client.editing = false;
+            })
+
+            app.clients = response.data.results
+
+            var pagination = {
+              count : response.data.count,
+              next : response.data.next,
+              previous : response.data.previous,
+              pageSize : 5,
+              total : Math.round(response.data.count/5)
+            }
+
+            app.pagination = pagination
+          })
+          .catch(e => {
+            app.errors = e
+          })
+        }
+			}
+		});
+
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block dropdown %}
+
+<ul id="dropdown" class="dropdown-content">
+  <li><a href="{% url 'logout' %}">Log out</a></li>
+</ul>
+
+{% endblock %}
+
+{% block navbar %}
+
+<li><a class="dropdown-button" data-activates="dropdown">{{request.user.username}}<i class="material-icons right">arrow_drop_down</i></a>
+</li>
+
+{% endblock %}
