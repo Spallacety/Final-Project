@@ -1,7 +1,9 @@
-import axios from 'axios';
-
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "XCSRF-TOKEN";
+
+$( window ).on( "load", function() {
+  $('select').material_select(true);
+});
 
 $(document).ready(function() {
   $('.tooltipped').tooltip({delay: 50});
@@ -9,7 +11,6 @@ $(document).ready(function() {
   $('.modal').modal({
     dismissible: true
   });
-  $('select').material_select();
   $(".dropdown-button").dropdown({
     inDuration: 300,
     outDuration: 225,

@@ -37,7 +37,7 @@ class ClientDetailSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
   class Meta:
     model = Product
-    fields = ('url', 'description', 'price',)
+    fields = ('url', 'id', 'description', 'price',)
 
 class SaleSerializer(serializers.ModelSerializer):
   employee = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -46,7 +46,7 @@ class SaleSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Sale
-    fields = ('url', 'employee', 'client', 'date',)
+    fields = ('url', 'id', 'employee', 'client', 'date',)
 
 class SaleDetailSerializer(serializers.ModelSerializer):
   employee = serializers.SlugRelatedField(read_only=True, slug_field='name')
@@ -56,7 +56,7 @@ class SaleDetailSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Sale
-    fields = ('url', 'employee', 'client', 'date', 'items',)
+    fields = ('url', 'id', 'employee', 'client', 'date', 'items',)
 
 class SaleItemSerializer(serializers.ModelSerializer):
   sale = serializers.HyperlinkedRelatedField(queryset=Sale.objects.all(), view_name='sale-detail')
@@ -65,4 +65,4 @@ class SaleItemSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = SaleItem
-    fields = ('url', 'sale', 'product', 'quantity', 'total_price',)
+    fields = ('url', 'id', 'sale', 'product', 'quantity', 'total_price',)

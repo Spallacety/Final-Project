@@ -17,14 +17,28 @@
         </thead>
         <tbody>
         <tr v-for='client in clients'>
-          <td>[[ client.name ]]</td>
-          <td>[[ client.address ]]</td>
-          <td>[[ client.phone ]]</td>
+          <td v-if="!client.editing">[[ client.name ]]</td>
+          <td v-else><input width="100%" type="text" v-model="client.name"></td>
+          <td v-if="!client.editing">[[ client.address ]]</td>
+          <td v-else><input width="100%" type="text" v-model="client.address"></td>
+          <td v-if="!client.editing">[[ client.phone ]]</td>
+          <td v-else><input width="100%" type="text" v-model="client.phone"></td>
 
           {% if request.user.is_authenticated %}
-          <td class="row vallign right-align">
+          <td v-if="!client.editing" class="row vallign right-align">
+            <a class="btn-flat img-btn tooltipped" @click="editClient(client)">
+              <i class="material-icons amber-text">edit</i>
+            </a>
             <a class="btn-flat img-btn tooltipped" @click="deleteClient(client)">
               <i class="material-icons red-text">delete</i>
+            </a>
+          </td>
+          <td v-else class="row vallign right-align">
+            <a class="btn-flat img-btn tooltipped" @click="confirmUpdate(client)">
+              <i class="material-icons green-text">check</i>
+            </a>
+            <a class="btn-flat img-btn tooltipped" @click="cancelEditing(client)">
+              <i class="material-icons red-text">close</i>
             </a>
           </td>
           {% endif %}
@@ -167,9 +181,6 @@
         }
 			}
 		});
-
-
-
 </script>
 
 {% endblock %}

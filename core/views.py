@@ -16,3 +16,9 @@ def employees(request):
 
 def clients(request):
   return render(request, 'clients.html', {'base_template': get_template(request)})
+
+def products(request):
+  return render(request, 'products.html', {'base_template': get_template(request)})
+
+def sales(request):
+  return render(request, 'sales.html', {'base_template': get_template(request)})

@@ -1,0 +1,154 @@
+{% extends base_template %}
+
+{% block content %}
+
+<h4 class="main-text center">Sales</h4>
+
+<div id="app">
+  <div class="row">
+    <div class="col s12">
+      <table class="highlight">
+        <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Client</th>
+          <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for='sale in sales'>
+          <td>[[ sale.employee ]]</td>
+          <td>[[ sale.client ]]</td>
+          <td>[[ sale.date ]]</td>
+
+          {% if request.user.is_authenticated %}
+          <td class="row vallign right-align">
+            <a class="btn-flat img-btn" @click="deleteSale(sale)">
+              <i class="material-icons red-text">delete</i>
+            </a>
+          </td>
+          {% endif %}
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ul class="pagination center">
+    <li><a class="" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Previous" @click="getSales(pagination.previous)" :disabled="!pagination.previous"><i
+        class="material-icons">chevron_left</i></a></li>
+    <li><a class="" data-position="bottom"
+           data-delay="50"
+           data-tooltip="Next" @click="getSales(pagination.next)" :disabled="!pagination.next"><i
+        class="material-icons">chevron_right</i></a></li>
+  </ul>
+
+  {% if request.user.is_authenticated %}
+  <div class="row">
+    <div class="col s12">
+      <div class="card-panel grey lighten-5">
+        <h4 class="center main-text">Make new sale</h4>
+        <form>
+          {% csrf_token %}
+          <div class="row">
+            <div class="input-field col s12">
+              <select v-model="sale.client">
+                <option disabled selected>Client</option>
+                <option>Ricardo Santos</option>
+                <option v-for="client in clients" value="[[ client.id ]]">[[client.name]]</option>
+              </select>
+              <label>Client</label>
+            </div>
+            <div class="input-field col s12 center">
+              <button class="btn waves-effect waves-light main-color" @click.prevent="makeSale">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script type="text/javascript">
+		var app = new Vue({
+			el: '#app',
+			delimiters: ["[[","]]"],
+			data : {
+				sales : [],
+				clients : [],
+				sale : {client : ""},
+				pagination : {
+          count : 0,
+          next : '',
+          previous : ''
+        },
+			},
+			mounted () {
+        axios.all([this.getSales('/api/sales/'), this.getClients()])
+        $('select').material_select();
+			},
+			methods : {
+			  makeSale : function(){
+					axios.post("/api/sales/", app.sale)
+					.then(function(response){
+						app.response = response
+						this.getSales()
+					})
+					.catch(e => {
+						console.log(e)
+					})
+				},
+
+				deleteSale : function(sale) {
+          var index = app.sales.indexOf(sale)
+
+          axios.delete('/api/sale/'+ sale.id + '/')
+            .then(function(response) {
+                app.sales.splice(index,1)
+            })
+            .catch(e => {
+              console.log(e)
+            })
+        },
+
+				getSales : function(url){
+          axios.get(url)
+          .then(function(response){
+            app.sales = response.data.results
+
+            var pagination = {
+              count : response.data.count,
+              next : response.data.next,
+              previous : response.data.previous,
+              pageSize : 5,
+              total : Math.round(response.data.count/5)
+            }
+
+            app.pagination = pagination
+          })
+          .catch(e => {
+            app.errors = e
+          })
+        },
+
+        getClients : function(){
+          axios.get('/api/clients/')
+          .then(function(response){
+            app.clients = response.data.results
+          })
+          .catch(e => {
+            app.errors = e
+          })
+        },
+			}
+		});
+
+
+
+
+</script>
+
+{% endblock %}
